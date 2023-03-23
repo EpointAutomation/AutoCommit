@@ -1,0 +1,31 @@
+notifications:
+  email:
+    recipients:
+      - 
+    on_success: always # default: change
+    on_failure: always # default: always
+
+branches:
+  only:
+    - auto-commit 
+
+before_install:
+  - export TZ='Asia/Shanghai'
+
+
+script:
+  - mkdir Notification
+
+after_script:
+  - cp README.md ./Notification/
+  - cd ./Notification
+  - git init
+  - git config user.name "EpointAutomation"
+  - git config user.email "EpointAutomation@gmail.com"
+  - git add .
+  - git commit -m "Auto Inform By TravisCI With Build $TRAVIS_BUILD_NUMBER"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master
+
+env:
+ global:
+   - GH_REF: github.com/EpointAutomation/AutoCommit
